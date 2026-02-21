@@ -7,7 +7,7 @@ void PWM_Init(void)
 	
 	GPIO_InitTypeDef GPIO_InitStructure;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0 | GPIO_Pin_1 | GPIO_Pin_2 | GPIO_Pin_3;	//A0,A1,A2,A3引脚
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0 | GPIO_Pin_1 | GPIO_Pin_2 | GPIO_Pin_3;		//A0,A1,A2,A3引脚
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_Init(GPIOA, &GPIO_InitStructure);
 	
@@ -31,15 +31,12 @@ void PWM_Init(void)
 	TIM_OC1Init(TIM2, &TIM_OCInitStructure);//配置TIM2的输出比较通道1
 	TIM_OC1PreloadConfig(TIM2, TIM_OCPreload_Enable);           // 使能预装载
 	
-	TIM_OCInitStructure.TIM_Pulse = 0;		//CCR
 	TIM_OC2Init(TIM2, &TIM_OCInitStructure);//配置TIM2的输出比较通道2
 	TIM_OC2PreloadConfig(TIM2, TIM_OCPreload_Enable);           // 使能预装载
 	
-	TIM_OCInitStructure.TIM_Pulse = 0;		//CCR
 	TIM_OC3Init(TIM2, &TIM_OCInitStructure);//配置TIM2的输出比较通道3
 	TIM_OC3PreloadConfig(TIM2, TIM_OCPreload_Enable);           // 使能预装载
 	
-	TIM_OCInitStructure.TIM_Pulse = 0;		//CCR
 	TIM_OC4Init(TIM2, &TIM_OCInitStructure);//配置TIM2的输出比较通道4
 	TIM_OC4PreloadConfig(TIM2, TIM_OCPreload_Enable);           // 使能预装载
 	
