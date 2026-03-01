@@ -2,8 +2,8 @@
 #include "Delay.h"
 #include "Servo.h"
 
-#define T 			((uint32_t)800)			//扑动的周期，单位ms
-#define GAP			((uint32_t)200)			//前后的相位差，单位ms（应小于T/2）
+#define T 			((uint32_t)500)			//扑动的周期，单位ms
+#define GAP			((uint32_t)100)			//前后的相位差，单位ms（应小于T/2）
 #define Amplitude	((float)120)			//振幅
 
 int flag1 = 1;
