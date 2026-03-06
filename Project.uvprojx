@@ -685,6 +685,16 @@
               <FileType>5</FileType>
               <FilePath>.\Hardware\Servo.h</FilePath>
             </File>
+            <File>
+              <FileName>pwm_capture.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Hardware\pwm_capture.h</FilePath>
+            </File>
+            <File>
+              <FileName>pwm_capture.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Hardware\pwm_capture.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

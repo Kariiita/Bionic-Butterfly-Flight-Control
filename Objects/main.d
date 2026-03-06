@@ -30,3 +30,4 @@
 .\objects\main.o: .\Library\misc.h
 .\objects\main.o: .\System\Delay.h
 .\objects\main.o: .\Hardware\Servo.h
+.\objects\main.o: .\Hardware\pwm_capture.h
