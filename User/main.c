@@ -1,61 +1,56 @@
-#include "stm32f10x.h"                  // Device header
+#include "stm32f10x.h"
 #include "Delay.h"
 #include "Servo.h"
 #include "pwm_capture.h"
 
-#define T 			((uint32_t)800)			//扑动的周期，单位ms
-#define GAP			((uint32_t)200)			//前后的相位差，单位ms（应小于T/2）
-#define AMPLITUDE	((float)120)			//振幅
+// 记录四个通道的平滑角度状态，防止互相干扰
+typedef struct {
+    float last_angle;
+    float current_servo_angle;
+} Filter_Obj;
 
+Filter_Obj f_list[4] = {{90.0f, 90.0f}, {90.0f, 90.0f}, {90.0f, 90.0f}, {90.0f, 90.0f}};
 
-/**
- *@brief	
- */
-void SetAngleMapped(float last_angle, float servo_angle)
-{
-	if (PWM_Capture_IsValid())
-	{
-		uint16_t pulse = PWM_Capture_GetPulseUs();
+void Process_Servo(PWM_Channel pwm_ch, SERVO_Channel servo_ch, Filter_Obj* f) {
+    if (PWM_IsValid(pwm_ch)) {
+        uint16_t pulse = PWM_GetPulseUs(pwm_ch);
+        
+        // 1. 严格限幅 (根据你的接收机而定，典型值1000-2000)
+        if (pulse < 1000) pulse = 1000;
+        if (pulse > 2000) pulse = 2000;
 
-		/* 限幅 */
-		if (pulse < 1000) pulse = 1000;
-		if (pulse > 2000) pulse = 2000;
+        // 2. 转换为目标角度
+        float target = (float)(pulse - 1000) / 1000.0f * 180.0f;
 
-		/* 脉宽映射到角度：1000us→0°  2000us→180° */
-		float target_angle = (float)(pulse - 1000) / 1000.0f * 180.0f;
+        // 3. 一阶低通滤波 (系数 0.2 意味着 20% 新数据 + 80% 旧数据)
+        // 这个系数越小，舵机越稳，但响应会变肉
+        f->last_angle = f->last_angle + 0.2f * (target - f->last_angle);
 
-		/* ========== 一阶低通滤波（关键！消除抖动） ========== */
-		/* 系数0.3：越小越平滑但响应越慢，越大响应越快但越抖 */
-		/* 0.2~0.4 适合舵机控制 */
-		float angle = last_angle + 0.3f * (target_angle - last_angle);
-		last_angle = angle;
-
-		/* 死区：角度变化太小就不更新，避免舵机反复微调抖动 */
-		if (angle - servo_angle > 2.0f || servo_angle - angle > 2.0f)
-		{
-			servo_angle = angle;
-			Servo_SetAngle1(servo_angle);
-		}
-	}
-	/* 无信号时不动，保持上次位置 */
+        // 4. 死区判断 (变化小于 1.5 度不动作，彻底消除静态抖动)
+        if (f->last_angle - f->current_servo_angle > 1.5f || 
+            f->current_servo_angle - f->last_angle > 1.5f) {
+            f->current_servo_angle = f->last_angle;
+            Servo_SetAngle(f->current_servo_angle, servo_ch);
+        }
+    }
 }
 
-
-int main(void)
-{
-    float last_angle = 90.0f;  /* 上一次的角度，用于平滑 */
-	static float servo_angle = 90.0f;
-	
+int main(void) {
     SystemInit();
-    Servo_Init();
-    PWM_Capture_Init();
+    // 延迟确保电压稳定
+    Delay_ms(200);
 
-    /* 等待接收机信号稳定 */
-    Delay_ms(500);
-	
-    while (1)
-    {
-        SetAngleMapped(last_angle, servo_angle);
+    Servo_Init();
+    PWM_Capture_InitAll();
+
+    while (1) {
+        // 轮询处理通道
+        Process_Servo(PWM_CH_PB6, SERVO_CH_PA0, &f_list[0]);
+        Process_Servo(PWM_CH_PB8, SERVO_CH_PA1, &f_list[1]);
+		Process_Servo(PWM_CH_PA8, SERVO_CH_PA2, &f_list[2]);
+		Process_Servo(PWM_CH_PA10, SERVO_CH_PA3, &f_list[3]);
+        
+        // 关键：延时控制。接收机 50Hz，我们延时 20ms 最匹配。
         Delay_ms(20);
     }
 }

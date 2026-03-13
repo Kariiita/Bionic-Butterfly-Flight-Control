@@ -3,30 +3,25 @@
 
 #include "stm32f10x.h"
 
-/**
- * @brief  初始化PB6(TIM4_CH1)为PWM输入捕获模式
- * @note   使用TIM4的PWM Input模式，自动捕获周期和占空比
- */
-void PWM_Capture_Init(void);
+// 定义可用的PWM通道
+typedef enum {
+    PWM_CH_PB6,   // TIM4_CH1 (上升沿) + TIM4_CH2 (下降沿)
+    PWM_CH_PB8,   // TIM4_CH3 (上升沿) + TIM4_CH4 (下降沿)
+    PWM_CH_PA8,   // TIM1_CH1 (上升沿) + TIM1_CH2 (下降沿)
+    PWM_CH_PA10,  // TIM1_CH3 (上升沿) + TIM1_CH4 (下降沿)
+    PWM_CH_NUM
+} PWM_Channel;
 
-/**
- * @brief  获取捕获到的PWM占空比
- * @return 占空比值，范围 0.0 ~ 100.0（百分比）
- *         如果没有信号输入，返回 0.0
- */
-float PWM_Capture_GetDuty(void);
+// 初始化所有PWM捕获通道
+void PWM_Capture_InitAll(void);
 
-/**
- * @brief  获取捕获到的PWM频率
- * @return 频率值，单位 Hz
- *         如果没有信号输入，返回 0.0
- */
-uint16_t PWM_Capture_GetPulseUs(void);
+// 检查指定通道是否有有效信号
+uint8_t PWM_IsValid(PWM_Channel ch);
 
-/**
- * @brief  检查是否有有效的PWM信号输入
- * @return 1: 有信号  0: 无信号
- */
-uint8_t PWM_Capture_IsValid(void);
+// 获取高电平脉宽（微秒）
+uint16_t PWM_GetPulseUs(PWM_Channel ch);
 
-#endif /* __PWM_CAPTURE_H */
+// 获取占空比（百分比，0~100）
+float PWM_GetDuty(PWM_Channel ch);
+
+#endif
