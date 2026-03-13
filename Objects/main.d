@@ -30,4 +30,5 @@
 .\objects\main.o: .\Library\misc.h
 .\objects\main.o: .\System\Delay.h
 .\objects\main.o: .\Hardware\Servo.h
-.\objects\main.o: .\Hardware\ibus.h
+.\objects\main.o: .\Hardware\pwm_capture.h
+.\objects\main.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h

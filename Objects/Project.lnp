@@ -28,7 +28,7 @@
 ".\objects\delay.o"
 ".\objects\pwm.o"
 ".\objects\servo.o"
-".\objects\ibus.o"
+".\objects\pwm_capture.o"
 ".\objects\main.o"
 ".\objects\stm32f10x_it.o"
 --strict --scatter ".\Objects\Project.sct"

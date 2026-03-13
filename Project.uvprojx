@@ -686,14 +686,14 @@
               <FilePath>.\Hardware\Servo.h</FilePath>
             </File>
             <File>
-              <FileName>ibus.c</FileName>
+              <FileName>pwm_capture.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\Hardware\ibus.c</FilePath>
+              <FilePath>.\Hardware\pwm_capture.c</FilePath>
             </File>
             <File>
-              <FileName>ibus.h</FileName>
+              <FileName>pwm_capture.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\Hardware\ibus.h</FilePath>
+              <FilePath>.\Hardware\pwm_capture.h</FilePath>
             </File>
           </Files>
         </Group>

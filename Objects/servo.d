@@ -29,3 +29,4 @@
 .\objects\servo.o: .\Library\stm32f10x_wwdg.h
 .\objects\servo.o: .\Library\misc.h
 .\objects\servo.o: Hardware\PWM.h
+.\objects\servo.o: Hardware\Servo.h
